@@ -7,7 +7,6 @@ module  m_npy
     character, parameter                :: major     = achar(2)   !major *.npy version 
     character, parameter                :: minor     = achar(0)   !minor *.npy version
     logical, parameter                  :: use_big_endian = .False.
-    character(len=*), parameter         :: zip_flag  = "-q0"  
     character(len=*), parameter         :: magic_str = "NUMPY"
 
     interface save_npy
