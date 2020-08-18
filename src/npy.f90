@@ -1,6 +1,9 @@
 module m_npy
     implicit none
 
+    private
+    public :: save_npy
+
     integer(4), parameter       :: p_un      = 23
     character, parameter        :: magic_num = achar(147) ! x93
     character, parameter        :: major     = achar(2)   !major *.npy version
