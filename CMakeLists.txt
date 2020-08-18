@@ -11,7 +11,7 @@ set(CMAKE_Fortran_COMPILER_ID "Intel")
 
 
 if(CMAKE_Fortran_COMPILER_ID MATCHES "GNU")
-    set(dialect "-ffree-form -cpp -std=gnu -fimplicit-none")
+    set(dialect "-ffree-form -std=gnu -fimplicit-none")
 	#set(bounds "-fbounds-check")
 endif()
 if(CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
