@@ -3,9 +3,9 @@ module m_npy
     private
     public :: save_npy
 #ifdef __UNIT__
-    integer(4), parameter       :: u = __UNIT__
+    integer, parameter :: u = __UNIT__
 #else
-    integer(4), parameter       :: u = 100
+    integer, parameter :: u = 100
 #endif
     character(len=6), parameter :: magic_str = achar(int(Z'93')) // "NUMPY"
     character(len=2), parameter :: major_minor = achar(2) // achar(0)
