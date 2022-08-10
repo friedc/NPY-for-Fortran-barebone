@@ -23,7 +23,7 @@ contains
         character(len=*), parameter  :: var_type = "<i8"
         integer(4)                   :: header_len, s_mtx(2), i, j
 
-        s_mtx = shape(mtx)
+        s_mtx = shape(int64_mtx)
         header_len = len(dict_str(var_type, s_mtx))
         open(unit=p_un, file=filename, form="unformatted", access="stream")
         write (p_un) magic_num, magic_str, major, minor
@@ -40,7 +40,7 @@ contains
         character(len=*), parameter  :: var_type = "<i8"
         integer(4)                   :: header_len, s_vec(1), i
 
-        s_vec = shape(vec)
+        s_vec = shape(int64_vec)
         header_len = len(dict_str(var_type, s_vec))
         open(unit=p_un, file=filename, form="unformatted", access="stream")
         write (p_un) magic_num, magic_str, major, minor
@@ -57,7 +57,7 @@ contains
         character(len=*), parameter  :: var_type = "<f8"
         integer(4)                   :: header_len, s_mtx(2), i, j
 
-        s_mtx = shape(mtx)
+        s_mtx = shape(dbl_mtx)
         header_len = len(dict_str(var_type, s_mtx))
         open(unit=p_un, file=filename, form="unformatted", access="stream")
         write (p_un) magic_num, magic_str, major, minor
@@ -73,7 +73,7 @@ contains
         real(8), intent(in)          :: dbl_vec(:)
         character(len=*), parameter  :: var_type = "<f8"
         integer(4)                   :: header_len, s_vec(1), i
-        s_vec = shape(vec)
+        s_vec = shape(dbl_vec)
         header_len = len(dict_str(var_type, s_vec))
         open(unit=p_un, file=filename, form="unformatted", access="stream")
         write (p_un) magic_num, magic_str, major, minor
