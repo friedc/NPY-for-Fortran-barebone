@@ -21,7 +21,7 @@ contains
         integer(8), intent(in)       :: int64_mtx(:,:)
 
         character(len=*), parameter  :: var_type = "<i8"
-        integer(4)                   :: header_len, s_mtx(2), i, j
+        integer(4)                   :: header_len, s_mtx(2)
 
         s_mtx = shape(int64_mtx)
         header_len = len(dict_str(var_type, s_mtx))
@@ -38,7 +38,7 @@ contains
         character(len=*), intent(in) :: filename
         integer(8), intent(in)       :: int64_vec(:)
         character(len=*), parameter  :: var_type = "<i8"
-        integer(4)                   :: header_len, s_vec(1), i
+        integer(4)                   :: header_len, s_vec(1)
 
         s_vec = shape(int64_vec)
         header_len = len(dict_str(var_type, s_vec))
@@ -55,7 +55,7 @@ contains
         character(len=*), intent(in) :: filename
         real(8), intent(in)          :: dbl_mtx(:,:)
         character(len=*), parameter  :: var_type = "<f8"
-        integer(4)                   :: header_len, s_mtx(2), i, j
+        integer(4)                   :: header_len, s_mtx(2)
 
         s_mtx = shape(dbl_mtx)
         header_len = len(dict_str(var_type, s_mtx))
@@ -72,7 +72,7 @@ contains
         character(len=*), intent(in) :: filename
         real(8), intent(in)          :: dbl_vec(:)
         character(len=*), parameter  :: var_type = "<f8"
-        integer(4)                   :: header_len, s_vec(1), i
+        integer(4)                   :: header_len, s_vec(1)
         s_vec = shape(dbl_vec)
         header_len = len(dict_str(var_type, s_vec))
         open(unit=p_un, file=filename, form="unformatted", access="stream")
