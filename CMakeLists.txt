@@ -1,29 +1,17 @@
 cmake_minimum_required(VERSION 2.8)
-project(STB)
 
-file(GLOB_RECURSE sources src/*.f90 )
-
-add_executable(npy.x ${sources})
+project(NPY-for-Fortran)
 
 enable_language(Fortran)
-set(CMAKE_Fortran_COMPILER ifort)
-set(CMAKE_Fortran_COMPILER_ID "Intel")
+
+add_executable(example src/npy.f90 src/example.f90)
 
 if(CMAKE_Fortran_COMPILER_ID MATCHES "GNU")
-    set(dialect "-Wall -Wextra -ffree-form -std=f2003")
-    #set(bounds "-fbounds-check")
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wall -Wextra -ffree-form -std=f2003")
 endif()
 if(CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
-    set(dialect "-stand f2003")
-    #set(bounds "-check bounds")
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -stand f2003")
 endif()
 if(CMAKE_Fortran_COMPILER_ID MATCHES "PGI")
-    set(dialect "-Mfreeform -Mallocatable=03 -Mstandard")
-    #set(bounds "-C")
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Mfreeform -Mallocatable=03 -Mstandard")
 endif()
-
-set(CMAKE_Fortran_FLAGS_DEBUG "${CMAKE_Fortran_FLAGS_DEBUG} ${bounds}")
-set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${dialect}")
-
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
-MESSAGE( STATUS "cmake_module_path:    " ${CMAKE_MODULE_PATH})
