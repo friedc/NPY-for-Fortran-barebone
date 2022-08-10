@@ -7,9 +7,8 @@ module m_npy
 #else
     integer(4), parameter       :: u = 100
 #endif
-    character(len=*), parameter :: magic_str = achar(int(Z'93')) // "NUMPY"
-    character, parameter        :: major     = achar(2)
-    character, parameter        :: minor     = achar(0)
+    character(len=6), parameter :: magic_str = achar(int(Z'93')) // "NUMPY"
+    character(len=2), parameter :: major_minor = achar(2) // achar(0)
     interface save_npy
         module procedure write_int64_vec, write_int64_mtx, &
                          write_dbl_vec,   write_dbl_mtx
@@ -19,53 +18,48 @@ contains
         implicit none
         character(len=*), intent(in)  :: filename
         integer(8), intent(in)        :: int64_mtx(:,:)
-        character(len=*), parameter   :: var_type = "<i8"
         character(len=:), allocatable :: header
         integer(4)                    :: header_len
-        integer                       :: s_mtx(2)
-        header = dict_str(var_type, shape(int64_mtx))
+        header = dict_str("<i8", shape(int64_mtx))
         header_len = len(header)
         open(u, file=filename, form="unformatted", access="stream")
-        write (u) magic_str, major, minor, header_len, header, int64_mtx
+        write (u) magic_str, major_minor, header_len, header, int64_mtx
         close(u)
     end subroutine write_int64_mtx
     subroutine  write_int64_vec(filename, int64_vec)
         implicit none
         character(len=*), intent(in)  :: filename
         integer(8), intent(in)        :: int64_vec(:)
-        character(len=*), parameter   :: var_type = "<i8"
         character(len=:), allocatable :: header
         integer(4)                    :: header_len
-        header = dict_str(var_type, shape(int64_vec))
+        header = dict_str("<i8", shape(int64_vec))
         header_len = len(header)
         open(u, file=filename, form="unformatted", access="stream")
-        write (u) magic_str, major, minor, header_len, header, int64_vec
+        write (u) magic_str, major_minor, header_len, header, int64_vec
         close(u)
     end subroutine write_int64_vec
     subroutine  write_dbl_mtx(filename, dbl_mtx)
         implicit none
         character(len=*), intent(in)  :: filename
         real(8), intent(in)           :: dbl_mtx(:,:)
-        character(len=*), parameter   :: var_type = "<f8"
         character(len=:), allocatable :: header
         integer(4)                    :: header_len
-        header = dict_str(var_type, shape(dbl_mtx))
+        header = dict_str("<f8", shape(dbl_mtx))
         header_len = len(header)
         open(u, file=filename, form="unformatted", access="stream")
-        write (u) magic_str, major, minor, header_len, header, dbl_mtx
+        write (u) magic_str, major_minor, header_len, header, dbl_mtx
         close(u)
     end subroutine write_dbl_mtx
     subroutine  write_dbl_vec(filename, dbl_vec)
         implicit none
         character(len=*), intent(in)  :: filename
         real(8), intent(in)           :: dbl_vec(:)
-        character(len=*), parameter   :: var_type = "<f8"
         character(len=:), allocatable :: header
         integer(4)                    :: header_len
-        header = dict_str(var_type, shape(dbl_vec))
+        header = dict_str("<f8", shape(dbl_vec))
         header_len = len(header)
         open(u, file=filename, form="unformatted", access="stream")
-        write (u) magic_str, major, minor, header_len, header, dbl_vec
+        write (u) magic_str, major_minor, header_len, header, dbl_vec
         close(u)
     end subroutine write_dbl_vec
     function dict_str(var_type, var_shape) result(str)
@@ -76,7 +70,7 @@ contains
         integer                       :: var_shape_dims, num_spaces, i
         character(len=13)             :: small_str
         character(len=:), allocatable :: shape_str
-        str = "{'descr':'" // var_type // "','fortran_order': True,"
+        str = "{'descr':'" // var_type // "','fortran_order':True,"
         var_shape_dims = size(var_shape)
         shape_str = " "
         do i = 1, var_shape_dims
