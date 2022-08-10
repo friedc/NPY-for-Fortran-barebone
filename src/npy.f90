@@ -4,8 +4,8 @@ module m_npy
     private
     public :: save_npy
 
-    integer(4), parameter       :: p_un      = 23
-    character, parameter        :: magic_num = achar(147) ! x93
+    integer(4), parameter       :: u = 23
+    character, parameter        :: magic_num = achar(int(Z'93'))
     character, parameter        :: major     = achar(2)   !major *.npy version
     character, parameter        :: minor     = achar(0)   !minor *.npy version
     character(len=*), parameter :: magic_str = "NUMPY"
@@ -19,18 +19,17 @@ contains
         implicit none
         character(len=*), intent(in) :: filename
         integer(8), intent(in)       :: int64_mtx(:,:)
-
         character(len=*), parameter  :: var_type = "<i8"
         integer(4)                   :: header_len, s_mtx(2)
 
         s_mtx = shape(int64_mtx)
         header_len = len(dict_str(var_type, s_mtx))
-        open(unit=p_un, file=filename, form="unformatted", access="stream")
-        write (p_un) magic_num, magic_str, major, minor
-        write (p_un) header_len
-        write (p_un) dict_str(var_type, s_mtx)
-        write (p_un) int64_mtx
-        close(unit=p_un)
+        open(u, file=filename, form="unformatted", access="stream")
+        write (u) magic_num, magic_str, major, minor
+        write (u) header_len
+        write (u) dict_str(var_type, s_mtx)
+        write (u) int64_mtx
+        close(u)
     end subroutine write_int64_mtx
 
     subroutine  write_int64_vec(filename, int64_vec)
@@ -42,12 +41,12 @@ contains
 
         s_vec = shape(int64_vec)
         header_len = len(dict_str(var_type, s_vec))
-        open(unit=p_un, file=filename, form="unformatted", access="stream")
-        write (p_un) magic_num, magic_str, major, minor
-        write (p_un) header_len
-        write (p_un) dict_str(var_type, s_vec)
-        write (p_un) int64_vec
-        close(unit=p_un)
+        open(u, file=filename, form="unformatted", access="stream")
+        write (u) magic_num, magic_str, major, minor
+        write (u) header_len
+        write (u) dict_str(var_type, s_vec)
+        write (u) int64_vec
+        close(u)
     end subroutine write_int64_vec
 
     subroutine  write_dbl_mtx(filename, dbl_mtx)
@@ -59,12 +58,12 @@ contains
 
         s_mtx = shape(dbl_mtx)
         header_len = len(dict_str(var_type, s_mtx))
-        open(unit=p_un, file=filename, form="unformatted", access="stream")
-        write (p_un) magic_num, magic_str, major, minor
-        write (p_un) header_len
-        write (p_un) dict_str(var_type, s_mtx)
-        write (p_un) dbl_mtx
-        close(unit=p_un)
+        open(u, file=filename, form="unformatted", access="stream")
+        write (u) magic_num, magic_str, major, minor
+        write (u) header_len
+        write (u) dict_str(var_type, s_mtx)
+        write (u) dbl_mtx
+        close(u)
     end subroutine write_dbl_mtx
 
     subroutine  write_dbl_vec(filename, dbl_vec)
@@ -73,14 +72,15 @@ contains
         real(8), intent(in)          :: dbl_vec(:)
         character(len=*), parameter  :: var_type = "<f8"
         integer(4)                   :: header_len, s_vec(1)
+
         s_vec = shape(dbl_vec)
         header_len = len(dict_str(var_type, s_vec))
-        open(unit=p_un, file=filename, form="unformatted", access="stream")
-        write (p_un) magic_num, magic_str, major, minor
-        write (p_un) header_len
-        write (p_un) dict_str(var_type, s_vec)
-        write (p_un) dbl_vec
-        close(unit=p_un)
+        open(u, file=filename, form="unformatted", access="stream")
+        write (u) magic_num, magic_str, major, minor
+        write (u) header_len
+        write (u) dict_str(var_type, s_vec)
+        write (u) dbl_vec
+        close(u)
     end subroutine write_dbl_vec
 
     function dict_str(var_type, var_shape) result(str)
