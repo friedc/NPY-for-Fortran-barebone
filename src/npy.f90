@@ -15,10 +15,10 @@ module m_npy
                          write_dbl_vec,   write_dbl_mtx
     end interface save_npy
 contains
-    subroutine write_int64_mtx(filename, mtx)
+    subroutine write_int64_mtx(filename, int64_mtx)
         implicit none
         character(len=*), intent(in) :: filename
-        integer(8), intent(in)       :: mtx(:,:)
+        integer(8), intent(in)       :: int64_mtx(:,:)
 
         character(len=*), parameter  :: var_type = "<i8"
         integer(4)                   :: header_len, s_mtx(2), i, j
@@ -29,14 +29,14 @@ contains
         write (p_un) magic_num, magic_str, major, minor
         write (p_un) header_len
         write (p_un) dict_str(var_type, s_mtx)
-        write (p_un) mtx
+        write (p_un) int64_mtx
         close(unit=p_un)
     end subroutine write_int64_mtx
 
-    subroutine  write_int64_vec(filename, vec)
+    subroutine  write_int64_vec(filename, int64_vec)
         implicit none
         character(len=*), intent(in) :: filename
-        integer(8), intent(in)       :: vec(:)
+        integer(8), intent(in)       :: int64_vec(:)
         character(len=*), parameter  :: var_type = "<i8"
         integer(4)                   :: header_len, s_vec(1), i
 
@@ -46,14 +46,14 @@ contains
         write (p_un) magic_num, magic_str, major, minor
         write (p_un) header_len
         write (p_un) dict_str(var_type, s_vec)
-        write (p_un) vec
+        write (p_un) int64_vec
         close(unit=p_un)
     end subroutine write_int64_vec
 
-    subroutine  write_dbl_mtx(filename, mtx)
+    subroutine  write_dbl_mtx(filename, dbl_mtx)
         implicit none
         character(len=*), intent(in) :: filename
-        real(8), intent(in)          :: mtx(:,:)
+        real(8), intent(in)          :: dbl_mtx(:,:)
         character(len=*), parameter  :: var_type = "<f8"
         integer(4)                   :: header_len, s_mtx(2), i, j
 
@@ -63,14 +63,14 @@ contains
         write (p_un) magic_num, magic_str, major, minor
         write (p_un) header_len
         write (p_un) dict_str(var_type, s_mtx)
-        write (p_un) mtx
+        write (p_un) dbl_mtx
         close(unit=p_un)
     end subroutine write_dbl_mtx
 
-    subroutine  write_dbl_vec(filename, vec)
+    subroutine  write_dbl_vec(filename, dbl_vec)
         implicit none
         character(len=*), intent(in) :: filename
-        real(8), intent(in)          :: vec(:)
+        real(8), intent(in)          :: dbl_vec(:)
         character(len=*), parameter  :: var_type = "<f8"
         integer(4)                   :: header_len, s_vec(1), i
         s_vec = shape(vec)
@@ -79,7 +79,7 @@ contains
         write (p_un) magic_num, magic_str, major, minor
         write (p_un) header_len
         write (p_un) dict_str(var_type, s_vec)
-        write (p_un) vec
+        write (p_un) dbl_vec
         close(unit=p_un)
     end subroutine write_dbl_vec
 
