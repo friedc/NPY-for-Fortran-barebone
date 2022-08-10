@@ -4,7 +4,11 @@ module m_npy
     private
     public :: save_npy
 
-    integer(4), parameter       :: u = 100 ! need to check that the unit is unused
+#ifdef __UNIT__
+    integer(4), parameter       :: u = __UNIT__
+#else
+    integer(4), parameter       :: u = 100
+#endif
     character, parameter        :: magic_num = achar(int(Z'93'))
     character, parameter        :: major     = achar(2)   !major *.npy version
     character, parameter        :: minor     = achar(0)   !minor *.npy version
