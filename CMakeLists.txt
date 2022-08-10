@@ -4,6 +4,14 @@ project(NPY-for-Fortran)
 
 enable_language(Fortran)
 
+include(TestBigEndian)
+
+TEST_BIG_ENDIAN(IS_BIG_ENDIAN)
+
+if(IS_BIG_ENDIAN)
+  message(FATAL_ERROR "This library does not work on big endian architecures!")
+endif()
+
 add_library(npy_o OBJECT src/npy.f90)
 
 add_executable(example $<TARGET_OBJECTS:npy_o> src/example.f90)
