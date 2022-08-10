@@ -8,7 +8,6 @@ module m_npy
     character, parameter        :: magic_num = achar(147) ! x93
     character, parameter        :: major     = achar(2)   !major *.npy version
     character, parameter        :: minor     = achar(0)   !minor *.npy version
-    logical, parameter          :: use_big_endian = .False.
     character(len=*), parameter :: magic_str = "NUMPY"
 
     interface save_npy
@@ -16,66 +15,6 @@ module m_npy
                          write_dbl_vec,   write_dbl_mtx
     end interface save_npy
 contains
-    function Big_Endian()
-        implicit none
-        logical :: Big_Endian
-        Big_Endian = ichar(transfer(1,'a')) == 0
-    end function Big_Endian
-
-    function SWAP_I4(input) result(output)
-        implicit none
-        integer(4), parameter :: b_sz = 4
-        integer(b_sz), intent(in) :: input
-        integer(b_sz)             :: output
-
-        integer(1) :: byte_arr(b_sz), byte_arr_tmp(b_sz)
-        integer(1) :: i
-
-        byte_arr_tmp = transfer(input, byte_arr_tmp)
-
-        do i = 1, b_sz
-            byte_arr(i) = byte_arr_tmp(1 + b_sz - i)
-        enddo
-
-        output = transfer(byte_arr, output)
-    end function SWAP_I4
-
-    function SWAP_I8(input) result(output)
-        implicit none
-        integer(4), parameter :: b_sz = 8
-        integer(b_sz), intent(in) :: input
-        integer(b_sz)             :: output
-
-        integer(1) :: byte_arr(b_sz), byte_arr_tmp(b_sz)
-        integer(1) :: i
-
-        byte_arr_tmp = transfer(input, byte_arr_tmp)
-
-        do i = 1, b_sz
-            byte_arr(i) = byte_arr_tmp(1 + b_sz - i)
-        enddo
-
-        output = transfer(byte_arr, output)
-    end function SWAP_I8
-
-    function SWAP_F8(input) result(output)
-        implicit none
-        integer(4), parameter :: b_sz = 8
-        real(b_sz), intent(in) :: input
-        real(b_sz)             :: output
-
-        integer(1) :: byte_arr(b_sz), byte_arr_tmp(b_sz)
-        integer(1) :: i
-
-        byte_arr_tmp = transfer(input, byte_arr_tmp)
-
-        do i = 1, b_sz
-            byte_arr(i) = byte_arr_tmp(1 + b_sz - i)
-        enddo
-
-        output = transfer(byte_arr, output)
-    end function SWAP_F8
-
     subroutine write_int64_mtx(filename, mtx)
         implicit none
         character(len=*), intent(in) :: filename
@@ -86,30 +25,11 @@ contains
 
         s_mtx = shape(mtx)
         header_len = len(dict_str(var_type, s_mtx))
-
-        open(unit=p_un, file=filename, form="unformatted", &
-             access="stream")
-
+        open(unit=p_un, file=filename, form="unformatted", access="stream")
         write (p_un) magic_num, magic_str, major, minor
-
-        if(Big_Endian()) then
-            write (p_un) SWAP_I4(header_len)
-        else
-            write (p_un) header_len
-        endif
-
+        write (p_un) header_len
         write (p_un) dict_str(var_type, s_mtx)
-        
-        if(use_big_endian .eqv. Big_Endian()) then
-            write (p_un) mtx
-        else
-            do j = 1, size(mtx,2)
-                do i = 1, size(mtx,1)
-                    write (p_un) SWAP_I8(mtx(i,j))
-                enddo
-            enddo
-        endif
-
+        write (p_un) mtx
         close(unit=p_un)
     end subroutine write_int64_mtx
 
@@ -122,28 +42,11 @@ contains
 
         s_vec = shape(vec)
         header_len = len(dict_str(var_type, s_vec))
-
-        open(unit=p_un, file=filename, form="unformatted", &
-             access="stream")
-
+        open(unit=p_un, file=filename, form="unformatted", access="stream")
         write (p_un) magic_num, magic_str, major, minor
-
-        if(Big_Endian()) then
-            write (p_un) SWAP_I4(header_len)
-        else
-            write (p_un) header_len
-        endif
-
+        write (p_un) header_len
         write (p_un) dict_str(var_type, s_vec)
-
-        if(use_big_endian .eqv. Big_Endian()) then
-            write (p_un) vec
-        else
-            do i = 1, size(vec)
-                write (p_un) SWAP_I8(vec(i))
-            enddo
-        endif
-
+        write (p_un) vec
         close(unit=p_un)
     end subroutine write_int64_vec
 
@@ -156,30 +59,11 @@ contains
 
         s_mtx = shape(mtx)
         header_len = len(dict_str(var_type, s_mtx))
-
-        open(unit=p_un, file=filename, form="unformatted", &
-             access="stream")
-
+        open(unit=p_un, file=filename, form="unformatted", access="stream")
         write (p_un) magic_num, magic_str, major, minor
-
-        if(Big_Endian()) then
-            write (p_un) SWAP_I4(header_len)
-        else
-            write (p_un) header_len
-        endif
-
+        write (p_un) header_len
         write (p_un) dict_str(var_type, s_mtx)
-
-        if(use_big_endian .eqv. Big_Endian()) then
-            write (p_un) mtx
-        else
-            do j = 1, size(mtx,2)
-                do i =  1, size(mtx,1)
-                    write (p_un) SWAP_F8(mtx(i,j))
-                enddo
-            enddo
-        endif
-
+        write (p_un) mtx
         close(unit=p_un)
     end subroutine write_dbl_mtx
 
@@ -189,31 +73,13 @@ contains
         real(8), intent(in)          :: vec(:)
         character(len=*), parameter  :: var_type = "<f8"
         integer(4)                   :: header_len, s_vec(1), i
-
         s_vec = shape(vec)
         header_len = len(dict_str(var_type, s_vec))
-
-        open(unit=p_un, file=filename, form="unformatted", &
-             access="stream")
-
+        open(unit=p_un, file=filename, form="unformatted", access="stream")
         write (p_un) magic_num, magic_str, major, minor
-
-        if(Big_Endian()) then
-            write (p_un) SWAP_I4(header_len)
-        else
-            write (p_un) header_len
-        endif
-
+        write (p_un) header_len
         write (p_un) dict_str(var_type, s_vec)
-
-        if(use_big_endian .eqv. Big_Endian()) then  
-            write (p_un) vec
-        else
-            do i = 1, size(vec)
-                write (p_un) SWAP_F8(vec(i))
-            enddo
-        endif
-
+        write (p_un) vec
         close(unit=p_un)
     end subroutine write_dbl_vec
 
