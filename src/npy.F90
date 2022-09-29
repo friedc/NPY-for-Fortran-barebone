@@ -2,11 +2,6 @@ module m_npy
     implicit none
     private
     public :: save_npy
-#ifdef __UNIT__
-    integer, parameter :: u = __UNIT__
-#else
-    integer, parameter :: u = 100
-#endif
     character(len=6), parameter :: magic_str = achar(int(Z'93')) // "NUMPY"
     character(len=2), parameter :: major_minor = achar(2) // achar(0)
     interface save_npy
@@ -14,18 +9,20 @@ module m_npy
                          write_dbl_vec,   write_dbl_mtx
     end interface save_npy
 contains
+#ifndef NPY_UNIT
+#define NPY_UNIT 100
+#endif
 #define GENSUB(SNAME,PTYPE,PNAME,PSHAPE,PSTR) \
     subroutine SNAME(filename, PNAME);\
-        implicit none;\
         character(len=*), intent(in) :: filename;\
         PTYPE, intent(in) :: PNAME PSHAPE;\
         character(len=:), allocatable :: header;\
         integer(4) :: header_len;\
         header = dict_str(PSTR, shape(PNAME));\
         header_len = len(header);\
-        open(u, file=filename, form="unformatted", access="stream");\
-        write (u) magic_str, major_minor, header_len, header, PNAME ;\
-        close(u);\
+        open(NPY_UNIT, file=filename, form="unformatted", access="stream");\
+        write (NPY_UNIT) magic_str, major_minor, header_len, header, PNAME ;\
+        close(NPY_UNIT);\
     end subroutine SNAME
     GENSUB(write_int64_mtx,integer(8),int64_mtx,(:,:),"<i8")
     GENSUB(write_int64_vec,integer(8),int64_vec,(:),"<i8")
@@ -33,7 +30,6 @@ contains
     GENSUB(write_dbl_vec,real(8),dbl_vec,(:),"<f8")
 #undef GENSUB
     function dict_str(var_type, var_shape) result(str)
-        implicit none
         character(len=*), intent(in)  :: var_type
         integer, intent(in)           :: var_shape(:)
         character(len=:), allocatable :: str

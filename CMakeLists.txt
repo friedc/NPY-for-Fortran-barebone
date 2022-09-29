@@ -6,8 +6,8 @@ add_library(npy_o OBJECT src/npy.F90)
 
 if(DEFINED unit)
   message(STATUS "Unit is defined as ${unit}")
-# add_definitions(-D__UNIT__=${unit})
-  target_compile_definitions(npy_o PUBLIC __UNIT__=${unit})
+  # add_definitions(-D__UNIT__=${unit})
+  target_compile_definitions(npy_o PUBLIC NPY_UNIT=${unit})
 endif()
 
 add_executable(example $<TARGET_OBJECTS:npy_o> src/example.f90)
