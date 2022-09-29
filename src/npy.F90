@@ -39,23 +39,16 @@ contains
         character(len=:), allocatable :: str
         integer                       :: var_shape_dims, num_spaces, i
         character(len=13)             :: small_str
-        character(len=:), allocatable :: shape_str
-        str = "{'descr':'" // var_type // "','fortran_order':True,"
+        str = "{'descr':'" // var_type // "','fortran_order':True,'shape':("
         var_shape_dims = size(var_shape)
-        shape_str = " "
         do i = 1, var_shape_dims
             write (small_str, "(I13)") var_shape(i)
-            shape_str = shape_str // trim(adjustl(small_str))
+            str = str // trim(adjustl(small_str))
             if (var_shape_dims.eq.1 .or. i.lt.var_shape_dims) then
-              shape_str = shape_str // ","
+              str = str // ","
             endif
         enddo
-        shape_str = trim(adjustl(shape_str))
-        str = str // "'shape':(" // shape_str // ")}"
-        num_spaces = mod(16-mod(6+1+1+4+len(str)+1,16),16)
-        do i = 1, num_spaces
-            str = str // " "
-        enddo
-        str = str // achar(10)
+        num_spaces = mod(16-mod(6+1+1+4+len(str)+2+1, 16), 16)
+        str = str // ")}"  // repeat(" ", num_spaces) // achar(10)
     end function dict_str
 end module m_npy
