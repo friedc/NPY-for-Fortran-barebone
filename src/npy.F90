@@ -14,54 +14,24 @@ module m_npy
                          write_dbl_vec,   write_dbl_mtx
     end interface save_npy
 contains
-    subroutine write_int64_mtx(filename, int64_mtx)
-        implicit none
-        character(len=*), intent(in)  :: filename
-        integer(8), intent(in)        :: int64_mtx(:,:)
-        character(len=:), allocatable :: header
-        integer(4)                    :: header_len
-        header = dict_str("<i8", shape(int64_mtx))
-        header_len = len(header)
-        open(u, file=filename, form="unformatted", access="stream")
-        write (u) magic_str, major_minor, header_len, header, int64_mtx
-        close(u)
-    end subroutine write_int64_mtx
-    subroutine  write_int64_vec(filename, int64_vec)
-        implicit none
-        character(len=*), intent(in)  :: filename
-        integer(8), intent(in)        :: int64_vec(:)
-        character(len=:), allocatable :: header
-        integer(4)                    :: header_len
-        header = dict_str("<i8", shape(int64_vec))
-        header_len = len(header)
-        open(u, file=filename, form="unformatted", access="stream")
-        write (u) magic_str, major_minor, header_len, header, int64_vec
-        close(u)
-    end subroutine write_int64_vec
-    subroutine  write_dbl_mtx(filename, dbl_mtx)
-        implicit none
-        character(len=*), intent(in)  :: filename
-        real(8), intent(in)           :: dbl_mtx(:,:)
-        character(len=:), allocatable :: header
-        integer(4)                    :: header_len
-        header = dict_str("<f8", shape(dbl_mtx))
-        header_len = len(header)
-        open(u, file=filename, form="unformatted", access="stream")
-        write (u) magic_str, major_minor, header_len, header, dbl_mtx
-        close(u)
-    end subroutine write_dbl_mtx
-    subroutine  write_dbl_vec(filename, dbl_vec)
-        implicit none
-        character(len=*), intent(in)  :: filename
-        real(8), intent(in)           :: dbl_vec(:)
-        character(len=:), allocatable :: header
-        integer(4)                    :: header_len
-        header = dict_str("<f8", shape(dbl_vec))
-        header_len = len(header)
-        open(u, file=filename, form="unformatted", access="stream")
-        write (u) magic_str, major_minor, header_len, header, dbl_vec
-        close(u)
-    end subroutine write_dbl_vec
+#define GENSUB(SNAME,PTYPE,PNAME,PSHAPE,PSTR) \
+    subroutine SNAME(filename, PNAME);\
+        implicit none;\
+        character(len=*), intent(in) :: filename;\
+        PTYPE, intent(in) :: PNAME PSHAPE;\
+        character(len=:), allocatable :: header;\
+        integer(4) :: header_len;\
+        header = dict_str(PSTR, shape(PNAME));\
+        header_len = len(header);\
+        open(u, file=filename, form="unformatted", access="stream");\
+        write (u) magic_str, major_minor, header_len, header, PNAME ;\
+        close(u);\
+    end subroutine SNAME
+    GENSUB(write_int64_mtx,integer(8),int64_mtx,(:,:),"<i8")
+    GENSUB(write_int64_vec,integer(8),int64_vec,(:),"<i8")
+    GENSUB(write_dbl_mtx,real(8),dbl_mtx,(:,:),"<f8")
+    GENSUB(write_dbl_vec,real(8),dbl_vec,(:),"<f8")
+#undef GENSUB
     function dict_str(var_type, var_shape) result(str)
         implicit none
         character(len=*), intent(in)  :: var_type
