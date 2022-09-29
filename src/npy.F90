@@ -2,11 +2,8 @@ module m_npy
     implicit none
     private
     public :: save_npy
-    character(len=6), parameter :: magic_str = achar(int(Z'93')) // "NUMPY"
-    character(len=2), parameter :: major_minor = achar(2) // achar(0)
     interface save_npy
-        module procedure write_int64_vec, write_int64_mtx, &
-                         write_dbl_vec,   write_dbl_mtx
+        module procedure write_int64_vec, write_int64_mtx, write_dbl_vec, write_dbl_mtx
     end interface save_npy
 contains
 #ifndef NPY_UNIT
@@ -21,7 +18,7 @@ contains
         header = dict_str(PSTR, shape(PNAME));\
         header_len = len(header);\
         open(NPY_UNIT, file=filename, form="unformatted", access="stream");\
-        write (NPY_UNIT) magic_str, major_minor, header_len, header, PNAME ;\
+        write (NPY_UNIT) achar(int(Z'93')) // "NUMPY", achar(2) // achar(0), header_len, header, PNAME ;\
         close(NPY_UNIT);\
     end subroutine SNAME
     GENSUB(write_int64_mtx,integer(8),int64_mtx,(:,:),"<i8")
@@ -41,7 +38,6 @@ contains
             str = str // trim(adjustl(small_str))
             if (size(var_shape).eq.1 .or. i.lt.size(var_shape)) str = str // ","
         enddo
-        i = mod(16-mod(6+1+1+4+len(str)+2+1, 16), 16)
-        str = str // ")}"  // repeat(" ", i) // achar(10)
+        str = str // ")}"  // repeat(" ", mod(16-mod(6+1+1+4+len(str)+2+1, 16), 16)) // achar(10)
     end function dict_str
 end module m_npy
