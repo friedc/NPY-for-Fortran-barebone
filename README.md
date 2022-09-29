@@ -1,6 +1,6 @@
 # NPY for Fortran (barebone)
 Note: This is a fork that keeps only the bare minimum of functionality.
-Compared to the original NPY for Fortran the following functionality is removed:
+Compared to the original "NPY for Fortran" the following functionality is removed:
 * data types other than integer(8) or real(8)
 * dimensions other than 1 (vector) or 2 (matrix)
 * ability to run on big endian machines
