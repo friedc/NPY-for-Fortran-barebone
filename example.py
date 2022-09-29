@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import numpy as np
 
 a_soll =  np.zeros((10,20), dtype=np.double)

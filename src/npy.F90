@@ -37,18 +37,15 @@ contains
         character(len=*), intent(in)  :: var_type
         integer, intent(in)           :: var_shape(:)
         character(len=:), allocatable :: str
-        integer                       :: var_shape_dims, num_spaces, i
         character(len=13)             :: small_str
+        integer                       :: i
         str = "{'descr':'" // var_type // "','fortran_order':True,'shape':("
-        var_shape_dims = size(var_shape)
-        do i = 1, var_shape_dims
+        do i = 1, size(var_shape)
             write (small_str, "(I13)") var_shape(i)
             str = str // trim(adjustl(small_str))
-            if (var_shape_dims.eq.1 .or. i.lt.var_shape_dims) then
-              str = str // ","
-            endif
+            if (size(var_shape).eq.1 .or. i.lt.size(var_shape)) str = str // ","
         enddo
-        num_spaces = mod(16-mod(6+1+1+4+len(str)+2+1, 16), 16)
-        str = str // ")}"  // repeat(" ", num_spaces) // achar(10)
+        i = mod(16-mod(6+1+1+4+len(str)+2+1, 16), 16)
+        str = str // ")}"  // repeat(" ", i) // achar(10)
     end function dict_str
 end module m_npy
