@@ -8,6 +8,8 @@ if(DEFINED unit)
   message(STATUS "Unit is defined as ${unit}")
   # add_definitions(-D__UNIT__=${unit})
   target_compile_definitions(npy_o PUBLIC NPY_UNIT=${unit})
+else()
+  target_compile_definitions(npy_o PUBLIC NPY_UNIT=100)
 endif()
 
 add_executable(example $<TARGET_OBJECTS:npy_o> src/example.f90)
