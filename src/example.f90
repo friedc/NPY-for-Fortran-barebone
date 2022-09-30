@@ -1,5 +1,5 @@
 program main
-    use m_npy, only: save_npy
+    use npy, only: save_npy
     implicit none
     real(8) :: a(10,20), b(10)
     integer(8) :: i, j

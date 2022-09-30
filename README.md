@@ -10,7 +10,7 @@ The documentation given below is retained from the original project.
 
 ---
 
-This Fortran module allows to save numerical Fortran arrays in Numpy's .npy format. 
+This Fortran module allows to save numerical Fortran arrays in Numpy's .npy format.
 Currently supported are:
 ```fortran
 1. integer(8)

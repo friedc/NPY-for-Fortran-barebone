@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(NPY-for-Fortran Fortran)
+project(NPY-for-Fortran-barebone Fortran)
 
 add_library(npy_o OBJECT src/npy.F90)
 

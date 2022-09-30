@@ -1,4 +1,4 @@
-module m_npy
+module npy
     implicit none
     interface save_npy
         module procedure write_int64_vec, write_int64_mtx, write_dbl_vec, write_dbl_mtx
@@ -26,4 +26,4 @@ contains
     GENSUB(write_int64_vec,integer(8),int64_vec,(:),"<i8")
     GENSUB(write_dbl_mtx,real(8),dbl_mtx,(:,:),"<f8")
     GENSUB(write_dbl_vec,real(8),dbl_vec,(:),"<f8")
-end module m_npy
+end module npy
