@@ -10,6 +10,11 @@ if(DEFINED unit)
   target_compile_definitions(npy_o PUBLIC NPY_UNIT=${unit})
 endif()
 
+if(DEFINED export_symbols)
+  message(STATUS "Symbols will be exported")
+  target_compile_definitions(npy_o PUBLIC NPY_EXPORT_SYMBOLS=1)
+endif()
+
 add_executable(example $<TARGET_OBJECTS:npy_o> src/example.f90)
 
 add_custom_command(

@@ -30,3 +30,21 @@ contains
     GENSUB(write_dbl_mtx,real(8),dbl_mtx,(:,:),"<f8")
     GENSUB(write_dbl_vec,real(8),dbl_vec,(:),"<f8")
 end module npy
+#ifdef NPY_EXPORT_SYMBOLS
+subroutine npy_save_dbl_vec(fn,n,vec)
+    use npy, only: save_npy
+    implicit none
+    character(len=*), intent(in) :: fn
+    integer, intent(in) :: n
+    double precision,  intent(in) :: vec(n)
+    call save_npy(fn,vec)
+end subroutine npy_save_dbl_vec
+subroutine npy_save_dbl_mtx(fn,m,n,mtx)
+    use npy, only: save_npy
+    implicit none
+    character(len=*), intent(in) :: fn
+    integer, intent(in) :: m, n
+    double precision, intent(in) :: mtx(m*n)
+    call save_npy(fn,reshape(mtx,(/m,n/)))
+end subroutine npy_save_dbl_mtx
+#endif
